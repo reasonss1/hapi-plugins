@@ -10,7 +10,7 @@
 
 ## 开始开发
 
-使用有该私有仓库权限的 GitHub 账号进行克隆：
+仓库公开，任何人均可克隆源码：
 
 ```sh
 git clone --branch feat/plugins-todo https://github.com/reasonss1/hapi-plugins.git
@@ -21,6 +21,8 @@ git switch -c feat/your-task
 先阅读 [AGENTS.md](AGENTS.md) 和 [首版设计](docs/design/plugins-todo.md)。`AGENTS.md` 中的验证、命名空间隔离、会话与进程约束继续适用。
 
 每位 Agent 使用自己的 clone 或 worktree 和任务分支。提交 PR 时以本仓库的 `feat/plugins-todo` 为目标分支。不要在同一个工作目录同时写代码；涉及 shared 协议、数据库迁移或通用插件接口时，先在当前任务中同步约定。
+
+直接推送需要仓库写权限；其他贡献者可先 fork，再从自己的仓库提交 PR。
 
 其他机器克隆后，`origin` 指向协作仓库；需要跟踪上游时可以另外执行：
 
