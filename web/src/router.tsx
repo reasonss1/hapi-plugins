@@ -76,6 +76,7 @@ import SettingsChatPage from '@/routes/settings/chat'
 import SettingsVoicePage from '@/routes/settings/voice'
 import SettingsVoiceVoicesPage from '@/routes/settings/voice-voices'
 import SettingsVoiceAdvancedPage from '@/routes/settings/voice-advanced'
+import SettingsPluginsPage from '@/routes/settings/plugins'
 import SettingsMachinesPage from '@/routes/settings/machines'
 import SettingsAboutPage from '@/routes/settings/about'
 import SettingsStoragePage from '@/routes/settings/storage'
@@ -1436,6 +1437,12 @@ const settingsVoiceAdvancedRoute = createRoute({
     component: SettingsVoiceAdvancedPage,
 })
 
+const settingsPluginsRoute = createRoute({
+    getParentRoute: () => settingsRoute,
+    path: 'plugins',
+    component: SettingsPluginsPage,
+})
+
 const settingsMachinesRoute = createRoute({
     getParentRoute: () => settingsRoute,
     path: 'machines',
@@ -1492,6 +1499,7 @@ export const routeTree = rootRoute.addChildren([
         settingsVoiceRoute,
         settingsVoiceVoicesRoute,
         settingsVoiceAdvancedRoute,
+        settingsPluginsRoute,
         settingsMachinesRoute,
         settingsStorageRoute,
         settingsUsageRoute,

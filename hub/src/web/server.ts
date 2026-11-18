@@ -26,6 +26,7 @@ import { createEventsRoutes } from './routes/events'
 import { createSessionsRoutes } from './routes/sessions'
 import { createMessagesRoutes } from './routes/messages'
 import { createPermissionsRoutes } from './routes/permissions'
+import { createPluginRoutes } from './routes/plugins'
 import { createMachinesRoutes } from './routes/machines'
 import { createStorageRoutes } from './routes/storage'
 import { createUsageRoutes } from './routes/usage'
@@ -306,6 +307,7 @@ function createWebApp(options: {
     app.route('/api', createSessionsRoutes(options.getSyncEngine))
     app.route('/api', createMessagesRoutes(options.getSyncEngine))
     app.route('/api', createPermissionsRoutes(options.getSyncEngine))
+    app.route('/api', createPluginRoutes(options.getSyncEngine))
     app.route('/api', createMachinesRoutes(options.getSyncEngine, { dataDir: configuration.dataDir }))
     app.route('/api', createStorageRoutes(configuration.dbPath))
     app.route('/api', createHubSettingsRoutes(configuration.dataDir, options.getSyncEngine))

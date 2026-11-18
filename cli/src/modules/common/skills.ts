@@ -63,7 +63,7 @@ function getAgentConfigDir(flavor?: string): string {
     }
 }
 
-function getUserSkillsRoots(flavor?: string): string[] {
+export function getUserSkillsRoots(flavor?: string): string[] {
     const home = getHomeDirectory();
     const roots = [join(home, '.agents', 'skills')];
     switch (normalizeFlavor(flavor)) {

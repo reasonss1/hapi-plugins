@@ -46,6 +46,7 @@ See `src/router.tsx` for route definitions.
 - `/settings/voice/voices` - Full-page voice picker.
 - `/settings/voice/advanced` - Voice persona, tuning, and diagnostics.
 - `/settings/machines` - Machine management and runner status.
+- `/settings/plugins` - Connect MCP servers and install Skills on an opted-in Runner.
 - `/settings/storage` - SQLite storage sizes for the hub owner.
 - `/settings/usage` - Cache-aware token usage dashboard for the hub owner.
 - `/settings/about` - Application links and version information.

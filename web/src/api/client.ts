@@ -1,3 +1,4 @@
+import type { PluginRequest, PluginResponse } from '@hapi/protocol'
 import type {
     AttachmentMetadata,
     AbortChunkedUploadResponse,
@@ -1154,6 +1155,13 @@ export class ApiClient {
         await this.request(`/api/sessions/${encodeURIComponent(sessionId)}/permissions/${encodeURIComponent(requestId)}/deny`, {
             method: 'POST',
             body: JSON.stringify(options ?? {})
+        })
+    }
+
+    async managePlugins(machineId: string, request: PluginRequest): Promise<PluginResponse> {
+        return await this.request<PluginResponse>(`/api/machines/${encodeURIComponent(machineId)}/plugins`, {
+            method: 'POST',
+            body: JSON.stringify(request)
         })
     }
 

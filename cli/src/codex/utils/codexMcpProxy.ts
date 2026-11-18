@@ -4,7 +4,7 @@ import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 
 import { getHappyCliCommand } from '@/utils/spawnHappyCLI';
-import type { CodexMcpServersConfig } from './codexMcpServers';
+import type { CodexMcpServerConfig } from './codexMcpServers';
 
 const WINDOWS_COMMAND_SHIMS = new Set([
     'bunx',
@@ -22,8 +22,8 @@ type StdioProxySpec = {
     cwd?: string;
 };
 
-export type PreparedCodexMcpServers = {
-    servers: CodexMcpServersConfig;
+export type PreparedCodexMcpServers<T extends CodexMcpServerConfig = CodexMcpServerConfig> = {
+    servers: Record<string, T>;
     proxiedServerNames: string[];
     cleanup: () => Promise<void>;
 };
@@ -71,11 +71,11 @@ async function writeProxySpec(spec: StdioProxySpec): Promise<{ directory: string
  * Only Windows package-manager shims are proxied. All other entries, URL
  * transports, environment fields, and newer Codex fields remain unchanged.
  */
-export async function prepareCodexMcpServers(
-    servers: CodexMcpServersConfig,
+export async function prepareCodexMcpServers<T extends CodexMcpServerConfig>(
+    servers: Record<string, T>,
     platform = process.platform
-): Promise<PreparedCodexMcpServers> {
-    const prepared: CodexMcpServersConfig = {};
+): Promise<PreparedCodexMcpServers<T>> {
+    const prepared: Record<string, T> = {};
     const proxiedServerNames: string[] = [];
     const temporaryDirectories: string[] = [];
 

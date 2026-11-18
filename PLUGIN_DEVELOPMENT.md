@@ -5,7 +5,7 @@
 - 协作仓库：[reasonss1/hapi-plugins](https://github.com/reasonss1/hapi-plugins)。
 - 功能集成分支及当前默认分支：`feat/plugins-todo`。
 - 上游：[tiann/hapi](https://github.com/tiann/hapi)。源码基于 v0.36.0 发布提交 `8ff6bd12fae6da205cb50edb9710470c0c0429e6`，保留来源历史和原有许可证。
-- 当前交付是完整 HAPI 源码、插件需求设计和本交接说明。插件管理、微软授权、任务同步与 Agent 任务工具尚未实现。
+- 首版方向：设置中的通用 MCP 接入和 Skill 安装，支持 Codex 和 Claude Code，见[用户指引](docs/guide/plugins.md)。微软 To Do 可使用第三方服务；HaPi 不在首版实现微软授权、任务同步或任务验收。
 - 现有线上部署和其他本地修复不属于这个功能分支。向上游提案、发布或部署单独安排。
 
 ## 开始开发
@@ -30,7 +30,7 @@ git switch -c feat/your-task
 git remote add upstream https://github.com/tiann/hapi.git
 ```
 
-## 保留的产品要求
+## 后续可选的 To Do 工作流
 
 1. 可视化插件管理：每个插件有独立条目、状态和配置入口，首个优先插件是 Microsoft To Do。
 2. To Do 工作台的布局和交互尽量接近微软 To Do；每个任务右侧增加 Agent 图标，可查看领取、阶段和成果。
@@ -38,7 +38,7 @@ git remote add upstream https://github.com/tiann/hapi.git
 4. 任务、执行状态和必要上下文可跨 Agent、会话和执行设备交接；工作区文件另行交接。
 5. 插件支持 MCP 和其他 API，能力范围按 Agent 的实际接入能力声明；先做可验证的首版。
 
-## 建议拆分的开发任务
+## 后续工作流的建议拆分
 
 | 范围 | 主要接入点 | 依赖 |
 | --- | --- | --- |
@@ -62,8 +62,8 @@ bun run test:hub
 bun run test:web
 ```
 
-根据实际改动范围选择检查；跨包变更遵循 `AGENTS.md` 的完整验证要求。此次仅增加文档，已检查本地链接和格式，未运行实现测试。
+根据实际改动范围选择检查；跨包变更遵循 `AGENTS.md` 的完整验证要求。
 
 本机另有 `8735877`（passkey reflect-metadata 修复），尚未合入这个功能分支。启动时若遇到对应问题，先单独核实是否需要前置修复，不把已有修补混成插件功能。
 
-验收目标：电脑 A 的 Agent 处理部分任务，电脑 B 上另一种 Agent 经显式交接后继续，用户在手机查看成果并验收，HAPI 与 To Do 最终一致。
+后续 To Do 工作流的验收目标：电脑 A 的 Agent 处理部分任务，电脑 B 上另一种 Agent 经显式交接后继续，用户在手机查看成果并验收，HAPI 与 To Do 最终一致。

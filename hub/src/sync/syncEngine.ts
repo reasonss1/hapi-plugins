@@ -1,3 +1,4 @@
+import type { PluginRequest, PluginResponse } from '@hapi/protocol'
 /**
  * Sync Engine for HAPI Telegram Bot (Direct Connect)
  *
@@ -5839,6 +5840,10 @@ export class SyncEngine {
 
     async getAgentAvailability(machineId: string): ReturnType<RpcGateway['getAgentAvailability']> {
         return await this.rpcGateway.getAgentAvailability(machineId)
+    }
+
+    async managePlugins(machineId: string, request: PluginRequest): Promise<PluginResponse> {
+        return await this.rpcGateway.managePlugins(machineId, request)
     }
 
     async getUsageQuerySettings(machineId: string, agent: UsageQueryAgent): Promise<UsageQuerySettingsResponse> {

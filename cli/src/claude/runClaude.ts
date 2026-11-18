@@ -28,6 +28,7 @@ import {
     CLAUDE_CONVERSATION_HISTORY,
     toConversationHistoryCapabilities
 } from '@hapi/protocol/conversationHistory';
+import { loadClaudePluginServers } from '@/plugins/agentConfig';
 import { listSkills, type SkillSummary } from '@/modules/common/skills';
 
 export interface StartOptions {
@@ -609,6 +610,7 @@ export async function runClaude(options: StartOptions = {}): Promise<void> {
                 syncSessionModes();
             },
             mcpServers: {
+                ...await loadClaudePluginServers(),
                 'hapi': {
                     type: 'http' as const,
                     url: happyServer.url,

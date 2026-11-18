@@ -14,6 +14,9 @@ import { codexHome, saveRuntime, runtimeDirectory, runtimeAuthHash, findColdBind
 import { startCodexGateway, record, string, type Envelope } from './gateway';
 import { resolveSharedCodex, sharedLaunchConfig, initializeSharedClient, checkSharedCapabilities, takeReservedSessionId, type SharedLaunchOptions } from './launch';
 import { SharedCodexRoot } from './root';
+import { loadCodexPluginServers } from '@/plugins/agentConfig';
+import { prepareCodexMcpServers } from '../utils/codexMcpProxy';
+import { buildPluginMcpConfigArgs } from '../utils/codexMcpConfig';
 import { buildForkSessionSummary } from '@hapi/protocol';
 
 export type RuntimeReady = { sessionId: string; runtime: CodexRuntimeRecord };
@@ -57,6 +60,7 @@ export async function runSharedRuntime(options: SharedLaunchOptions, onReady?: (
     // Every thread injects its own identity. A launch from another agent must not inherit that root's identity.
     delete env.HAPI_SESSION_ID;
     let server: ChildProcess | undefined;
+    let cleanupPluginServers: (() => Promise<void>) | undefined;
     let gateway: Awaited<ReturnType<typeof startCodexGateway>> | undefined;
     let stopping = false;
     let failure: unknown;
@@ -148,6 +152,7 @@ export async function runSharedRuntime(options: SharedLaunchOptions, onReady?: (
             logger.debug('[Codex shared] shutdown', error);
         }).finally(async () => {
             await Promise.allSettled([...prepared].map(root => root.close(ending.has(root))));
+            await cleanupPluginServers?.().catch(error => logger.debug('[Codex shared] MCP proxy cleanup', error));
             await rm(sockets, { recursive: true, force: true }).catch(error => logger.debug('[Codex shared] socket cleanup', error));
             finish();
         });
@@ -336,7 +341,11 @@ export async function runSharedRuntime(options: SharedLaunchOptions, onReady?: (
     startup = (async () => {
         if (abortSignal?.aborted) throw new Error('Codex startup canceled');
         assertRunning();
-        server = spawn(command.command, [...command.args, 'app-server', ...launch.serverArgs, '--listen', upstream,
+        const plugins = await prepareCodexMcpServers(await loadCodexPluginServers());
+        cleanupPluginServers = plugins.cleanup;
+        assertRunning();
+        const pluginArgs = buildPluginMcpConfigArgs(plugins.servers);
+        server = spawn(command.command, [...command.args, 'app-server', ...launch.serverArgs, ...pluginArgs, '--listen', upstream,
             ...(upstreamToken ? ['--ws-auth', 'capability-token', '--ws-token-sha256', createHash('sha256').update(upstreamToken).digest('hex')] : [])],
             { cwd: launch.cwd, env, stdio: ['ignore', 'ignore', 'pipe'], windowsHide: true });
         server.stderr?.on('data', data => logger.debug('[Codex shared] app-server', data.toString()));

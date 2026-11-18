@@ -35,6 +35,7 @@ export const MACHINE_CAPABILITIES = {
     CursorChatStoreStatus: RPC_METHODS.CursorChatStoreStatus,
     StopRunner: RPC_METHODS.StopRunner,
     UsageQuery: RPC_METHODS.UsageQuery,
+    PluginManagement: RPC_METHODS.ManagePlugins,
     /** Read-only file/Git/search RPCs available on the long-lived runner. */
     WorkspaceFileAccess: 'workspace-file-access',
     /** Normalized local-session import transcripts via ListLocalSessions. */
@@ -52,6 +53,7 @@ export const CURRENT_MACHINE_CAPABILITIES: readonly MachineCapability[] = [
     MACHINE_CAPABILITIES.CursorChatStoreStatus,
     MACHINE_CAPABILITIES.StopRunner,
     MACHINE_CAPABILITIES.UsageQuery,
+    MACHINE_CAPABILITIES.PluginManagement,
     MACHINE_CAPABILITIES.WorkspaceFileAccess,
     MACHINE_CAPABILITIES.LocalSessionImport,
 ]

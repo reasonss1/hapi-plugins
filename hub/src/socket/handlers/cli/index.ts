@@ -157,8 +157,9 @@ export function registerCliHandlers(socket: CliSocketWithData, deps: CliHandlers
     }
 
     const machineId = typeof auth?.machineId === 'string' ? auth.machineId : null
-    if (machineId && resolveMachineAccess(machineId).ok) {
-        socket.join(`machine:${machineId}`)
+    const authorizedMachineId = machineId && resolveMachineAccess(machineId).ok ? machineId : null
+    if (authorizedMachineId) {
+        socket.join(`machine:${authorizedMachineId}`)
     }
 
     const emitAccessError = (scope: 'session' | 'machine', id: string, reason: AccessErrorReason) => {
@@ -170,7 +171,7 @@ export function registerCliHandlers(socket: CliSocketWithData, deps: CliHandlers
         socket.emit('error', { message, code: reason, scope, id })
     }
 
-    registerRpcHandlers(socket, rpcRegistry)
+    registerRpcHandlers(socket, rpcRegistry, authorizedMachineId)
     registerSessionHandlers(socket, {
         store,
         resolveSessionAccess,
