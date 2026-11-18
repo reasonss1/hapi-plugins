@@ -26,7 +26,7 @@ import {
     type PathExistsResponse
 } from '@hapi/protocol/apiTypes'
 import { RPC_METHODS } from '@hapi/protocol/rpcMethods'
-import { RUNNER_CAPABILITIES } from '@hapi/protocol'
+import { RUNNER_CAPABILITIES, PluginRequestSchema } from '@hapi/protocol'
 import type { RunnerState, Machine, MachineMetadata } from './types'
 import { RunnerStateSchema, MachineMetadataSchema } from './types'
 import { getInstalledCliMtimeMs } from '@/runner/controlClient'
@@ -94,6 +94,7 @@ import {
 } from '@hapi/protocol/usageQuery'
 import { UsageQueryService } from '@/usageQuery/service'
 import { getAgentQuotasResponse } from '@/agent/agentQuotas'
+import { PluginManager } from '@/plugins/manager'
 
 export { normalizeWindowsDriveRoot } from './machinePathPolicy'
 
@@ -203,6 +204,10 @@ export class ApiMachineClient {
             scopePrefix: this.machine.id,
             logger: (msg, data) => logger.debug(msg, data)
         })
+        const pluginManager = new PluginManager(configuration.happyHomeDir, token)
+        this.rpcHandlerManager.registerHandler(RPC_METHODS.ManagePlugins, (params) =>
+            pluginManager.manage(PluginRequestSchema.parse(params)))
+
         this.usageQueryService = new UsageQueryService({
             settingsFile: join(configuration.happyHomeDir, 'usage-query.json')
         })

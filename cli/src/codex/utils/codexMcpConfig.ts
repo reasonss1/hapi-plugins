@@ -10,6 +10,7 @@
 import { createHash } from 'node:crypto';
 import { CODEX_TOOL_HOOK_MATCHER } from './codexToolHookNames';
 import { getHappyCliCommand } from '@/utils/spawnHappyCLI';
+import type { CodexPluginServer } from '@/plugins/agentConfig';
 import type { McpServersConfig } from './buildHapiMcpBridge';
 
 /**
@@ -169,6 +170,16 @@ export function buildMcpServerConfigArgs(
     }
 
     return configArgs;
+}
+
+export function buildPluginMcpConfigArgs(servers: Record<string, CodexPluginServer>): string[] {
+    return Object.entries(servers).flatMap(([name, server]) => {
+        const quote = (value: string) => `"${escapeTomlString(value)}"`;
+        const config = 'url' in server
+            ? `{ url = ${quote(server.url)} }`
+            : `{ command = ${quote(server.command)}, args = [${server.args.map(quote).join(', ')}] }`;
+        return ['-c', `mcp_servers.${name}=${config}`];
+    });
 }
 
 /**
