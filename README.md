@@ -1,5 +1,9 @@
 # HAPI
 
+> **HAPI 插件协作开发仓库**：基于上游 HAPI v0.36.0，优先开发 Microsoft To Do 和跨 Agent 任务协作。当前只有设计稿，插件功能尚未实现。
+>
+> 开发分支：`feat/plugins-todo`。其他 Agent 请先阅读 [开发交接说明](PLUGIN_DEVELOPMENT.md)、[项目规则](AGENTS.md) 和 [To Do 首版设计](docs/design/plugins-todo.md)。下面保留上游项目介绍。
+
 Run official Claude Code / Codex / Cursor Agent / Grok Build / OpenCode / Kimi / Copilot / Antigravity / Pi / DeepSeek Harness sessions and control them remotely through native iOS / Android apps, Web / PWA, or Telegram Mini App.
 
 > **Why HAPI?** HAPI is a local-first alternative to Happy. See [Why Not Happy?](docs/guide/why-hapi.md) for the key differences.
