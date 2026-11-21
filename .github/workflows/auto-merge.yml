@@ -17,9 +17,12 @@ concurrency:
 
 jobs:
   merge:
+    # Copies of the upstream repository must explicitly opt in after setting
+    # AUTO_MERGE_TOKEN; otherwise scheduled sweeps have nothing to configure.
     if: |
-      github.event_name != 'workflow_run' ||
-      (github.event.workflow_run.event != 'push' && github.event.workflow_run.conclusion != 'skipped')
+      (github.repository == 'tiann/hapi' || vars.AUTO_MERGE_ENABLED == 'true') &&
+      (github.event_name != 'workflow_run' ||
+       (github.event.workflow_run.event != 'push' && github.event.workflow_run.conclusion != 'skipped'))
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -30,7 +33,7 @@ jobs:
       # whichever ref the caller selected.
       - uses: actions/checkout@v4
         with:
-          ref: main
+          ref: ${{ github.event.repository.default_branch }}
 
       - name: Merge approved PRs
         uses: actions/github-script@v7
@@ -39,7 +42,7 @@ jobs:
           AUTO_MERGE_APPROVER: ${{ vars.AUTO_MERGE_APPROVER }}
           AUTO_MERGE_REQUIRED_CHECKS: ${{ vars.AUTO_MERGE_REQUIRED_CHECKS }}
         with:
-          # A user token so merges trigger push workflows on main.
+          # A user token so merges trigger push workflows on the base branch.
           github-token: ${{ secrets.AUTO_MERGE_TOKEN || github.token }}
           script: |
             const { autoMerge } = require('./.github/scripts/auto-merge.cjs');
